@@ -1,0 +1,21 @@
+services:
+  dbpill:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dbpill
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - NODE_ENV=development
+    ports:
+      - "3000:3000"
+      - "5433:5433"
+    volumes:
+      - ./dbpill.sqlite.db:/app/dbpill.sqlite.db
+    restart: unless-stopped
+
+    # 如果需要連接到本機的資料庫，在 macOS/Windows 上使用 host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
